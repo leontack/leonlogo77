@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Мільйонний Магазин</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- --- Header --- -->
+  <header>
+    <h1>Мільйонний Магазин</h1>
+    <div>
+      <span id="user-email">Гість</span> | Баланс: $<span id="balance">0</span>
+      <button id="logout" style="display:none;">Вийти</button>
+    </div>
+  </header>
+
+  <!-- --- Банер BMW --- -->
+  <section id="banner" style="
+    background: linear-gradient(135deg, #111111 0%, #1a1a1a 100%), url('assets/themes/theme1.jpg') no-repeat center center / cover;
+    color: #ffffff;
+    text-align: center;
+    padding: 80px 20px;
+    border-bottom: 2px solid #2e9afe;
+  ">
+    <h2 style="font-size: 3em; margin-bottom: 10px;">Ласкаво просимо у Мільйонний Магазин</h2>
+    <p style="font-size: 1.5em; margin-bottom: 20px;">Ексклюзивні логотипи, обої та теми преміум-класу</p>
+    <a href="#products-section" style="
+      display: inline-block;
+      padding: 15px 30px;
+      background: #2e9afe;
+      color: #fff;
+      font-size: 1.2em;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: 0.3s;
+    " onmouseover="this.style.background='#1b6fb2'" onmouseout="this.style.background='#2e9afe'">
+      Переглянути товари
+    </a>
+  </section>
+
+  <!-- --- Авторизація --- -->
+  <section id="auth-section">
+    <input id="email" placeholder="Email">
+    <input id="password" type="password" placeholder="Пароль">
+    <button id="signup-btn">Реєстрація</button>
+    <button id="login-btn">Вхід</button>
+  </section>
+
+  <!-- --- Додавання товарів --- -->
+  <section id="add-product-section" style="display:none;">
+    <h2>Додати товар</h2>
+    <input id="product-name" placeholder="Назва">
+    <input id="product-price" placeholder="Ціна">
+    <!-- змінили на file input -->
+    <input id="product-image" type="file">
+    <select id="product-type">
+      <option value="logo">Логотип</option>
+      <option value="wallpaper">Обої</option>
+      <option value="theme">Тема</option>
+    </select>
+    <button id="add-product-btn">Додати товар</button>
+  </section>
+
+  <!-- --- Список товарів --- -->
+  <section id="products-section">
+    <h2>Товари</h2>
+    <div id="products" class="products-grid"></div>
+  </section>
+
+  <!-- --- Мій акаунт --- -->
+  <section id="account-section" style="display:none;">
+    <h2>Мій акаунт</h2>
+    <p>Email: <span id="acc-email"></span></p>
+    <p>Баланс: $<span id="acc-balance"></span></p>
+
+    <h3>Історія покупок</h3>
+    <div id="acc-purchases-list"></div>
+
+    <h3>Мої товари</h3>
+    <div id="acc-products"></div>
+  </section>
+
+  <!-- --- Toast --- -->
+  <div id="toast-container"></div>
+
+  <!-- --- Скрипт --- -->
+  <script type="module" src="script.js"></script>
+</body>
+</html>
