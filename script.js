@@ -1,21 +1,24 @@
 // === Імпорт Firebase ===
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-storage.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-storage.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-analytics.js";
 
-// === Конфіг твого Firebase (замінити на свої дані з Firebase Console) ===
+// === Firebase конфіг ===
 const firebaseConfig = {
-  apiKey: "ТВОЯ_API_KEY",
-  authDomain: "ТВОЄ_ДОМЕН.firebaseapp.com",
-  projectId: "ТВОЄ_PROJECT_ID",
-  storageBucket: "ТВОЄ_BUCKET.appspot.com",
-  messagingSenderId: "ТВОЄ_SENDER_ID",
-  appId: "ТВОЄ_APP_ID"
+  apiKey: "AIzaSyAtnxR3AbGppbKM_vnxsXcyglrjg-Fz9gA",
+  authDomain: "leonlogo77.firebaseapp.com",
+  projectId: "leonlogo77",
+  storageBucket: "leonlogo77.appspot.com", // виправлено
+  messagingSenderId: "481729836793",
+  appId: "1:481729836793:web:fbba92dd5d3a82be4cd428",
+  measurementId: "G-00PFFBH0JM"
 };
 
-// === Ініціалізація ===
+// === Ініціалізація Firebase ===
 const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
@@ -32,7 +35,7 @@ const balanceSpan = document.getElementById("balance");
 const addProductSection = document.getElementById("add-product-section");
 const productsContainer = document.getElementById("products");
 
-// === Реєстрація ===
+// === Реєстрація користувача ===
 signupBtn.onclick = async () => {
   try {
     const userCred = await createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
@@ -47,7 +50,7 @@ signupBtn.onclick = async () => {
   }
 };
 
-// === Логін ===
+// === Логін користувача ===
 loginBtn.onclick = async () => {
   try {
     await signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value);
@@ -61,17 +64,19 @@ logoutBtn.onclick = async () => {
   await signOut(auth);
 };
 
-// === Стан користувача ===
+// === Відстеження стану користувача ===
 onAuthStateChanged(auth, async (user) => {
   if (user) {
     userEmailSpan.textContent = user.email;
     logoutBtn.style.display = "inline";
     addProductSection.style.display = "block";
 
+    // Отримуємо баланс
     const userDoc = await getDoc(doc(db, "users", user.uid));
     if (userDoc.exists()) {
       balanceSpan.textContent = userDoc.data().balance;
     }
+
   } else {
     userEmailSpan.textContent = "Гість";
     logoutBtn.style.display = "none";
@@ -91,12 +96,12 @@ document.getElementById("add-product-btn").onclick = async () => {
     return;
   }
 
-  // Завантажуємо у Firebase Storage
+  // Завантаження у Firebase Storage
   const fileRef = ref(storage, "products/" + Date.now() + "-" + file.name);
   await uploadBytes(fileRef, file);
   const url = await getDownloadURL(fileRef);
 
-  // Записуємо у Firestore
+  // Збереження у Firestore
   await addDoc(collection(db, "products"), {
     name, price, url, type, owner: auth.currentUser.uid
   });
@@ -147,5 +152,5 @@ window.buyProduct = async (productId, price) => {
   alert("Покупка успішна!");
 };
 
-// === Автозавантаження товарів ===
+// === Завантаження товарів при старті ===
 loadProducts();
